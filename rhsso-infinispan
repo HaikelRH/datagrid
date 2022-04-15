@@ -1,0 +1,48 @@
+apiVersion: infinispan.org/v1
+kind: Infinispan
+metadata:
+  name: rhsso-infinispan
+  annotations:
+    infinispan.org/monitoring: 'true'
+spec:
+  replicas: 5
+  service:
+    type: DataGrid
+    container:
+      storage: 2Gi
+      ephemeralStorage: false
+      storageClassName: <storage-class-name>
+      extraJvmOpts: "-XX:NativeMemoryTracking=summary"
+      cpu: "1000m"
+      memory: 2Gi
+    sites:
+      local:
+        name: site1
+        expose:
+          type: NodePort
+          nodePort: 30000
+      locations:
+        - name: site1
+          url: openshift://<api.cluster1.endpoint>:6443
+          secretName: site1-token
+          clusterName: <site1_cluster_name>
+          namespace: <site1_cluster_namespace>
+        - name: site2
+          url: openshift://<api.cluster2.endpoint>:6443
+          secretName: site2-token
+          clusterName: <site2_cluster_name>
+          namespace: <site2_cluster_namespace>
+  logging:
+    categories:
+      org.jgroups.protocols.TCP: error
+      org.jgroups.protocols.relay.RELAY2: error
+  affinity:
+    podAntiAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+      - weight: 100
+        podAffinityTerm:
+          labelSelector:
+            matchLabels:
+              app: <rhsso-infinispan-pod>
+              clusterName: rhsso-infinispan
+          topologyKey: "kubernetes.io/hostname"
