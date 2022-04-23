@@ -1,0 +1,120 @@
+apiVersion: infinispan.org/v2alpha1
+kind: Cache
+metadata:
+  name: offline-client-sessions
+spec:
+  adminAuth:
+    secretName: basic-auth
+  clusterName: rhsso-infinispan
+  name: offlineClientSessions
+  template: |
+    <infinispan>
+    <cache-container>
+    <distributed-cache name="offlineClientSessions" mode="SYNC" statistics="true" remote-timeout="17500">
+      <backups>
+        <backup site="sso2" strategy="SYNC">
+          <take-offline min-wait="120000"/>
+        </backup>
+      </backups>
+      <persistence><file-store/></persistence>
+      <state-transfer enabled="true" timeout="60000"/>
+      <transaction mode="NONE"/>
+      <locking striping="false" concurrency-level="1000" acquire-timeout="15000"/>
+    </distributed-cache></cache-container></infinispan>
+
+apiVersion: infinispan.org/v2alpha1
+kind: Cache
+metadata:
+  name: offline-sessions
+spec:
+  adminAuth:
+    secretName: basic-auth
+  clusterName: rhsso-infinispan
+  name: offlineSessions
+  template: |
+    <infinispan>
+    <cache-container>
+    <distributed-cache name="offlineSessions" mode="SYNC" statistics="true" remote-timeout="17500">
+      <backups>
+        <backup site="sso2" strategy="SYNC">
+          <take-offline min-wait="120000"/>
+        </backup>
+      </backups>
+      <persistence><file-store/></persistence>
+      <state-transfer enabled="true" timeout="60000"/>
+      <transaction mode="NONE"/>
+      <locking striping="false" concurrency-level="1000" acquire-timeout="15000"/>
+    </distributed-cache></cache-container></infinispan>
+
+
+apiVersion: infinispan.org/v2alpha1
+kind: Cache
+metadata:
+  name: client-sessions
+spec:
+  adminAuth:
+    secretName: basic-auth
+  clusterName: rhsso-infinispan
+  name: ClientSessions
+  template: |
+    <infinispan>
+    <cache-container>
+    <distributed-cache name="ClientSessions" mode="SYNC" statistics="true" remote-timeout="17500">
+      <backups>
+        <backup site="sso2" strategy="SYNC">
+          <take-offline min-wait="120000"/>
+        </backup>
+      </backups>
+      <persistence><file-store/></persistence>
+      <state-transfer enabled="true" timeout="60000"/>
+      <transaction mode="NONE"/>
+      <locking striping="false" concurrency-level="1000" acquire-timeout="15000"/>
+    </distributed-cache></cache-container></infinispan>
+
+apiVersion: infinispan.org/v2alpha1
+kind: Cache
+metadata:
+  name: work
+spec:
+  adminAuth:
+    secretName: basic-auth
+  clusterName: rhsso-infinispan
+  name: work
+  template: |
+    <infinispan>
+    <cache-container>
+    <distributed-cache name="work" mode="SYNC" statistics="true" remote-timeout="17500">
+      <backups>
+        <backup site="sso2" strategy="SYNC">
+          <take-offline min-wait="120000"/>
+        </backup>
+      </backups>
+      <persistence><file-store/></persistence>
+      <state-transfer enabled="true" timeout="60000"/>
+      <transaction mode="NONE"/>
+      <locking striping="false" concurrency-level="1000" acquire-timeout="15000"/>
+    </distributed-cache></cache-container></infinispan>
+
+apiVersion: infinispan.org/v2alpha1
+kind: Cache
+metadata:
+  name: action-tokens
+spec:
+  adminAuth:
+    secretName: basic-auth
+  clusterName: rhsso-infinispan
+  name: actionTokens
+  template: |
+    <infinispan>
+    <cache-container>
+    <distributed-cache name="actionTokens" mode="SYNC" statistics="true" remote-timeout="17500">
+      <backups>
+        <backup site="sso2" strategy="SYNC">
+          <take-offline min-wait="120000"/>
+        </backup>
+      </backups>
+      <persistence><file-store/></persistence>
+      <state-transfer enabled="true" timeout="60000"/>
+      <transaction mode="NONE"/>
+      <locking striping="false" concurrency-level="1000" acquire-timeout="15000"/>
+    </distributed-cache></cache-container></infinispan>

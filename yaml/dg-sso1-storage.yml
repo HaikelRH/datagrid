@@ -1,0 +1,54 @@
+apiVersion: infinispan.org/v1
+kind: Infinispan
+metadata:
+  annotations:
+    infinispan.org/monitoring: 'true'
+  name: rhsso-infinispan
+  namespace: sso1
+spec:
+  affinity:
+    podAntiAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+        - podAffinityTerm:
+            labelSelector:
+              matchLabels:
+                app: infinispan-pod
+                clusterName: rhsso-infinispan
+                infinispan_cr: rhsso-infinispan
+            topologyKey: r.kubernetes.io/hostname
+          weight: 100
+  container:
+    storage: 2Gi
+    ephemeralStorage: false
+    storageClassName: nfs-storage
+    extraJvmOpts: "-XX:NativeMemoryTracking=summary"
+    cpu: "500m"
+    memory: 500Mi
+  logging:
+    categories:
+      org.jgroups.protocols.TCP: error
+      org.jgroups.protocols.relay.RELAY2: error
+  replicas: 2
+  security:
+    endpointAuthentication: true
+    endpointEncryption:
+      certSecretName: rhsso-infinispan-cert-secret
+      certServiceName: service.beta.openshift.io
+      clientCert: None
+      type: Service
+    endpointSecretName: rhsso-infinispan-generated-secret
+  service:
+    container:
+      storage: 1Gi
+    sites:
+      local:
+        expose:
+          nodePort: 30001
+          type: NodePort
+        name: sso1
+      locations:
+        - name: sso2
+          namespace: sso2
+          secretName: sso2dg-token
+          url: 'openshift://api.ocp4.example.com:6443'
+    type: DataGrid

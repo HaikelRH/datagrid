@@ -1,0 +1,61 @@
+apiVersion: infinispan.org/v2alpha1
+kind: Cache
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"infinispan.org/v2alpha1","kind":"Cache","metadata":{"annotations":{},"name":"login-failures","namespace":"sso1"},"spec":{"adminAuth":{"secretName":"basic-auth"},"clusterName":"rhsso-infinispan","name":"login-failures","template":"\u003cinfinispan\u003e\n\u003ccache-container\u003e\n\u003cdistributed-cache name=\"login-failures\" mode=\"SYNC\" statistics=\"true\" remote-timeout=\"17500\"\u003e\n  \u003cbackups\u003e\n    \u003cbackup site=\"sso2\" strategy=\"SYNC\"\u003e\n      \u003ctake-offline min-wait=\"120000\"/\u003e\n    \u003c/backup\u003e\n  \u003c/backups\u003e\n  \u003cpersistence\u003e\u003cfile-store/\u003e\u003c/persistence\u003e\n  \u003cstate-transfer enabled=\"true\" timeout=\"60000\"/\u003e\n  \u003ctransaction mode=\"NONE\"/\u003e\n  \u003clocking striping=\"false\" concurrency-level=\"1000\" acquire-timeout=\"15000\"/\u003e\n\u003c/distributed-cache\u003e\u003c/cache-container\u003e\u003c/infinispan\u003e\n"}}
+  creationTimestamp: "2022-04-15T19:10:23Z"
+  generation: 2
+  managedFields:
+  - apiVersion: infinispan.org/v2alpha1
+    fieldsType: FieldsV1
+    fieldsV1:
+      f:metadata:
+        f:annotations:
+          .: {}
+          f:kubectl.kubernetes.io/last-applied-configuration: {}
+      f:spec:
+        .: {}
+        f:clusterName: {}
+        f:name: {}
+        f:template: {}
+    manager: kubectl-client-side-apply
+    operation: Update
+    time: "2022-04-15T19:10:23Z"
+  - apiVersion: infinispan.org/v2alpha1
+    fieldsType: FieldsV1
+    fieldsV1:
+      f:status:
+        .: {}
+        f:conditions: {}
+        f:serviceName: {}
+    manager: infinispan-operator
+    operation: Update
+    time: "2022-04-15T20:17:46Z"
+  name: login-failures
+  namespace: sso1
+  resourceVersion: "703196"
+  selfLink: /apis/infinispan.org/v2alpha1/namespaces/sso1/caches/login-failures
+  uid: 8fee6e24-4107-44d9-b822-f400fee21997
+spec:
+  clusterName: rhsso-infinispan
+  name: login-failures
+  template: |
+    <infinispan>
+    <cache-container>
+    <distributed-cache name="login-failures" mode="SYNC" statistics="true" remote-timeout="17500">
+      <backups>
+        <backup site="sso2" strategy="SYNC">
+          <take-offline min-wait="120000"/>
+        </backup>
+      </backups>
+      <persistence><file-store/></persistence>
+      <state-transfer enabled="true" timeout="60000"/>
+      <transaction mode="NONE"/>
+      <locking striping="false" concurrency-level="1000" acquire-timeout="15000"/>
+    </distributed-cache></cache-container></infinispan>
+status:
+  conditions:
+  - status: "True"
+    type: Ready
+  serviceName: rhsso-infinispan

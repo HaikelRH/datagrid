@@ -1,0 +1,157 @@
+apiVersion: infinispan.org/v1
+kind: Infinispan
+metadata:
+  annotations:
+    infinispan.org/monitoring: "true"
+    infinispan.org/operatorPodTargetLabels: rht.comp,rht.comp_ver,rht.prod_name,rht.prod_version,rht.subcomp_t
+  creationTimestamp: "2022-04-15T20:07:58Z"
+  generation: 5
+  labels:
+    rht.comp: Data_Grid
+    rht.comp_ver: 8.3.0
+    rht.prod_name: Red_Hat_Runtimes
+    rht.prod_version: 2022-Q1
+    rht.subcomp_t: application
+  managedFields:
+  - apiVersion: infinispan.org/v1
+    fieldsType: FieldsV1
+    fieldsV1:
+      f:metadata:
+        f:annotations:
+          .: {}
+          f:infinispan.org/monitoring: {}
+      f:spec:
+        .: {}
+        f:container:
+          f:memory: {}
+        f:logging:
+          .: {}
+          f:categories:
+            .: {}
+            f:org.jgroups.protocols.TCP: {}
+            f:org.jgroups.protocols.relay.RELAY2: {}
+        f:replicas: {}
+        f:service:
+          .: {}
+          f:sites:
+            .: {}
+            f:local:
+              .: {}
+              f:expose:
+                .: {}
+                f:nodePort: {}
+                f:type: {}
+              f:name: {}
+            f:locations: {}
+          f:type: {}
+    manager: Mozilla
+    operation: Update
+    time: "2022-04-15T22:21:04Z"
+  - apiVersion: infinispan.org/v1
+    fieldsType: FieldsV1
+    fieldsV1:
+      f:metadata:
+        f:annotations:
+          f:infinispan.org/operatorPodTargetLabels: {}
+        f:labels:
+          .: {}
+          f:rht.comp: {}
+          f:rht.comp_ver: {}
+          f:rht.prod_name: {}
+          f:rht.prod_version: {}
+          f:rht.subcomp_t: {}
+      f:spec:
+        f:affinity:
+          .: {}
+          f:podAntiAffinity:
+            .: {}
+            f:preferredDuringSchedulingIgnoredDuringExecution: {}
+        f:container: {}
+        f:security:
+          .: {}
+          f:endpointAuthentication: {}
+          f:endpointEncryption:
+            .: {}
+            f:certSecretName: {}
+            f:certServiceName: {}
+            f:clientCert: {}
+            f:type: {}
+          f:endpointSecretName: {}
+        f:service:
+          f:container:
+            .: {}
+            f:storage: {}
+      f:status:
+        .: {}
+        f:conditions: {}
+        f:podStatus:
+          .: {}
+          f:ready: {}
+        f:statefulSetName: {}
+    manager: infinispan-operator
+    operation: Update
+    time: "2022-04-15T22:21:37Z"
+  name: rhsso-infinispan
+  namespace: sso1
+  resourceVersion: "714984"
+  selfLink: /apis/infinispan.org/v1/namespaces/sso1/infinispans/rhsso-infinispan
+  uid: 20e3cc3f-1324-40d3-9408-cccdbb4d0b1a
+spec:
+  affinity:
+    podAntiAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+      - podAffinityTerm:
+          labelSelector:
+            matchLabels:
+              app: infinispan-pod
+              clusterName: rhsso-infinispan
+              infinispan_cr: rhsso-infinispan
+          topologyKey: r.kubernetes.io/hostname
+        weight: 100
+  container:
+    memory: 500Mi
+  logging:
+    categories:
+      org.jgroups.protocols.TCP: error
+      org.jgroups.protocols.relay.RELAY2: error
+  replicas: 2
+  security:
+    endpointAuthentication: true
+    endpointEncryption:
+      certSecretName: rhsso-infinispan-cert-secret
+      certServiceName: service.beta.openshift.io
+      clientCert: None
+      type: Service
+    endpointSecretName: rhsso-infinispan-generated-secret
+  service:
+    container:
+      storage: 1Gi
+    sites:
+      local:
+        expose:
+          nodePort: 30001
+          type: NodePort
+        name: sso1
+      locations:
+      - name: sso2
+        namespace: sso2
+        secretName: sso2dg-token
+        url: openshift://api.ocp4.example.com:6443
+    type: DataGrid
+status:
+  conditions:
+  - status: "True"
+    type: PreliminaryChecksPassed
+  - status: "True"
+    type: GossipRouterReady
+  - message: 'View: rhsso-infinispan-0-15556,rhsso-infinispan-1-35254'
+    status: "True"
+    type: WellFormed
+  - message: 'Cross-Site view: sso1,sso2'
+    status: "True"
+    type: CrossSiteViewFormed
+  podStatus:
+    ready:
+    - rhsso-infinispan-1
+    - rhsso-infinispan-2
+  statefulSetName: rhsso-infinispan

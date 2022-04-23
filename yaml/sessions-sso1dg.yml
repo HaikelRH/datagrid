@@ -1,0 +1,23 @@
+apiVersion: infinispan.org/v2alpha1
+kind: Cache
+metadata:
+  name: sessions
+spec:
+  adminAuth:
+    secretName: basic-auth
+  clusterName: rhsso-infinispan
+  name: sessions
+  template: |
+    <infinispan>
+    <cache-container>
+    <distributed-cache name="sessions" mode="SYNC" statistics="true" remote-timeout="17500">
+      <backups>
+        <backup site="sso2" strategy="SYNC">
+          <take-offline min-wait="120000"/>
+        </backup>
+      </backups>
+      <persistence><file-store/></persistence>
+      <state-transfer enabled="true" timeout="60000"/>
+      <transaction mode="NONE"/>
+      <locking striping="false" concurrency-level="1000" acquire-timeout="15000"/>
+    </distributed-cache></cache-container></infinispan>
